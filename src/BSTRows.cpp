@@ -8,7 +8,7 @@ Ex : If Bst is
    / \
   4  10                      <-- Copy this row next from 10 and next 4 ..
  / \   \
-1   5   15                   <-- Order her is 15 ,5 ,1 
+1   5   15                   <-- Order here is 15 ,5 ,1 
           \
           17
 
@@ -29,9 +29,54 @@ struct node{
 	struct node *right;
 };
 
-
+int copying_elements_into_array(struct node*, struct node*,int*,int);
 
 int* BSTRighttoLeftRows(struct node* root)
 {
-    return NULL;
+	int* arr,index=0;
+	if (root == NULL)
+	{
+		return NULL;
+	}
+	else
+	{
+		arr = (int*)calloc(20,sizeof(int));
+		struct node* root_node = root,*prev_node=NULL;
+		arr[index] = root->data;
+		index++;
+		while (root_node != NULL)
+		{
+			index=copying_elements_into_array(root_node, prev_node, arr,index);
+			prev_node = root_node->left;
+			root_node = root_node->right;
+		}
+		arr = (int*)realloc(arr, (index));
+		return arr;
+	}
 }
+
+int copying_elements_into_array(struct node* root_node, struct node* prev_node, int* arr,int index)
+{
+	if (root_node == NULL)
+		return index;
+	else
+	{
+		struct node* temp1, *temp2;
+		temp1 = root_node->right;
+		temp2 = root_node->left;
+		if (temp1 != NULL)
+		{
+			arr[index] = temp1->data;
+			index++;
+		}
+		if (temp2 != NULL)
+		{
+			arr[index] = temp2->data;
+			index++;
+		}
+		if (prev_node != NULL)
+		index = copying_elements_into_array(prev_node, NULL, arr, index);
+		return index;
+	}
+}
+
