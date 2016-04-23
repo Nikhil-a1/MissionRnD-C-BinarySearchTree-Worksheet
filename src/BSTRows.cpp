@@ -28,55 +28,71 @@ struct node{
 	int data;
 	struct node *right;
 };
+int number_of_nodes(struct node*);
 
-int copying_elements_into_array(struct node*, struct node*,int*,int);
+int search_for_node(struct node*,int, int*, int);
+
+int number_of_nodes(struct node* root)
+{
+		int count=0;
+		if (root == NULL)
+			return 0;
+		else
+		{
+		count = 1 + number_of_nodes(root->left) + number_of_nodes(root->right); 
+		return count;
+	}
+}
 
 int* BSTRighttoLeftRows(struct node* root)
 {
-	int* arr,index=0;
+	int* arr, index = 0, size = 0,next_node_to_search=0;
 	if (root == NULL)
 	{
 		return NULL;
 	}
 	else
 	{
-		arr = (int*)calloc(20,sizeof(int));
-		struct node* root_node = root,*prev_node=NULL;
+		size = number_of_nodes(root);
+		arr = (int*)malloc(sizeof(int)*size);
 		arr[index] = root->data;
 		index++;
-		while (root_node != NULL)
+		for (; next_node_to_search < size; next_node_to_search++)
 		{
-			index=copying_elements_into_array(root_node, prev_node, arr,index);
-			prev_node = root_node->left;
-			root_node = root_node->right;
+			index = search_for_node(root,arr[next_node_to_search], arr, index);
 		}
-		arr = (int*)realloc(arr, (index));
 		return arr;
 	}
 }
-
-int copying_elements_into_array(struct node* root_node, struct node* prev_node, int* arr,int index)
+int search_for_node(struct node* root, int node_value, int* arr, int index)
 {
-	if (root_node == NULL)
-		return index;
-	else
+	if (root != NULL)
 	{
-		struct node* temp1, *temp2;
-		temp1 = root_node->right;
-		temp2 = root_node->left;
-		if (temp1 != NULL)
+		if (node_value == root->data)
 		{
-			arr[index] = temp1->data;
-			index++;
+			if (root->right != NULL)
+			{
+				arr[index] = root->right->data;
+				index++;
+			}
+			if (root->left != NULL)
+			{
+				arr[index] = root->left->data;
+				index++;
+			}
+			return index;
 		}
-		if (temp2 != NULL)
+		else if (root->data > node_value)
 		{
-			arr[index] = temp2->data;
-			index++;
+			root = root->left;
+			return index=search_for_node(root, node_value, arr, index);
 		}
-		if (prev_node != NULL)
-		index = copying_elements_into_array(prev_node, NULL, arr, index);
-		return index;
+		else if (root->data < node_value)
+		{
+			root = root->right;
+			return index= search_for_node(root, node_value, arr, index);
+		}
 	}
+	else
+		return 0;
 }
-

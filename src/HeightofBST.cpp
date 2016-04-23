@@ -40,17 +40,75 @@ struct node{
 	struct node *right;
 };
 
+int get_sum(struct node*);
 
-int get_height(struct node *root){
+int BSTheight(struct node*);
 
-	return 0;
+int get_height(struct node *root)
+{
+	if (root == NULL)
+		return -1;
+	else
+	{
+		int height;
+		height =BSTheight(root);
+		return height;
+	}
+}
+int BSTheight(struct node* root)
+{
+		int left_sub_tree_height=0 , right_sub_tree_height=0;
+		if (root == NULL)
+			return 0;
+		else
+		{
+			left_sub_tree_height = BSTheight(root->left);
+			right_sub_tree_height = BSTheight(root->right);
+			if (left_sub_tree_height > right_sub_tree_height)
+				return left_sub_tree_height + 1;
+			else
+				return right_sub_tree_height + 1;
+		}
+	
 }
 
-int get_left_subtree_sum(struct node *root){
-	return 0;
+int get_left_subtree_sum(struct node *root)
+{
+	if (root==NULL)
+	return -1;
+	else
+	{
+		int sum = 0;
+		struct node* temp = root;
+		temp = temp->left;
+		sum = get_sum(temp);
+		return sum;
+	}
 }
 
-int get_right_subtree_sum(struct node *root){
-	return 0;
+int get_right_subtree_sum(struct node *root)
+{
+	if (root==NULL)
+	return -1;
+	else
+	{
+		int sum = 0;
+		struct node* temp = root;
+		temp = root->right;
+		sum = get_sum(temp);
+		return sum;
+	}
+}
+int get_sum(struct node* root)
+{
+	if (root == NULL)
+		return 0;
+	else
+	{
+		int sum=0, left_tree , right_tree;
+		left_tree= get_sum(root->left);
+		right_tree = get_sum(root->right);
+		return sum = left_tree+right_tree+root->data;
+	}
 }
 
